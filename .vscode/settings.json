@@ -1,0 +1,6 @@
+{
+    "files.autoSave": "afterDelay",
+    "liveServer.settings.CustomBrowser": "chrome",
+    "cph.general.defaultLanguage": "cpp",
+    "liveServer.settings.AdvanceCustomBrowserCmdLine": ""
+}
