@@ -57,7 +57,7 @@ const orderSchema = mongoose.Schema(
       default: false,
     },
     paidAt: {
-      type: DAte,
+      type: Date,
     },
     idDelivered: {
       type: Boolean,
@@ -73,6 +73,6 @@ const orderSchema = mongoose.Schema(
   }
 );
 
-const Order = mongoose.model("Orer", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
 
 export default Order;
