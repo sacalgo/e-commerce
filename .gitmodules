@@ -1,3 +1,0 @@
-[submodule "external/pyfacebook"]
-	path = external/pyfacebook
-	url = http://github.com/sciyoshi/pyfacebook.git
