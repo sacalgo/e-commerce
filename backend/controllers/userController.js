@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
+import ResponseStatus from "../utils/responseStatus.js";
 
 //@desc  Auth & get token
 //@route POST /api/users/login
@@ -18,7 +19,7 @@ const authUser = asyncHandler(async (req, res) => {
       token: generateToken(user._id),
     });
   } else {
-    res.status(401);
+    res.status(ResponseStatus.UNAUTHORIZED);
     throw new Error("Invaid email or password");
   }
 
