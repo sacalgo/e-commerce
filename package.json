@@ -5,8 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node backend/server",
-    "server": "nodemon backend/server",
+    "start": "node --experimental-specifier-resolution=node backend/server",
+    "server": "nodemon --experimental-specifier-resolution=node backend/server",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeder",
@@ -24,7 +24,7 @@
     "mongoose": "^5.12.5"
   },
   "devDependencies": {
-    "concurrently": "^6.0.2",
+    "concurrently": "^3.5.1",
     "nodemon": "^2.0.7"
   }
 }
