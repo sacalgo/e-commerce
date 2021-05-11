@@ -16,12 +16,14 @@ const addOrderItems = asyncHandler(async (req, res) => {
     shippingPrice,
     totalPrice,
   } = req.body;
+
   if (orderItems && orderItems.length === 0) {
+    console.log("error yet aahe");
     res.status(ResponseStatus.BAD_REQUEST);
     throw new Error("No order items");
     return;
   } else {
-    const order = Order({
+    const order = new Order({
       user: req.user._id,
       orderItems,
       shippingAddress,
