@@ -1,4 +1,4 @@
-import  asyncHandler  from '../middleware/asyncHandler';
+import asyncHandler from "../middleware/asyncHandler";
 import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 import ResponseStatus from "../utils/responseStatus.js";
@@ -9,21 +9,24 @@ import ResponseStatus from "../utils/responseStatus.js";
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    });
-  } else {
+ 
+  try {
+     const user = await User.findOne({ email });
+    if (user && (user.matchPassword(password))) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      });
+      res.send({ email, password });
+      exit(1);
+    }
+  } catch (err) {
     res.status(ResponseStatus.UNAUTHORIZED);
     throw new Error("Invaid email or password");
   }
-
-  res.send({ email, password });
 });
 
 //@desc  Register a new user
@@ -83,20 +86,19 @@ const getUserProfile = asyncHandler(async (req, res) => {
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
   if (user) {
-       user.name=req.body.name||user.name;
-       user.email=req.body.email||user.email;
-       if(req.body.password){
-         user.password=req.body.password
-       }
-       const updatedUser=await user.save();
-        res.json({
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          isAdmin: user.isAdmin,
-          token: generateToken(user._id),
-        });
-
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+    const updatedUser = await user.save();
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user._id),
+    });
   } else {
     res.status(ResponseStatus.NOT_FOUND);
     throw new Error("User not found");
