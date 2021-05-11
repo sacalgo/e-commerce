@@ -9,10 +9,9 @@ import ResponseStatus from "../utils/responseStatus.js";
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
- 
   try {
-     const user = await User.findOne({ email });
-    if (user && (user.matchPassword(password))) {
+    const user = await User.findOne({ email });
+    if (user && user.matchPassword(password)) {
       res.json({
         _id: user._id,
         name: user.name,
