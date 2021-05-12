@@ -6,7 +6,7 @@ import {
   updateOrderToPaid,
   getMyOrders
 } from "../controllers/orderController";
-import protect from "../middleware/authMiddleware";
+import { protect } from "../middleware/authMiddleware";
 
 router.route("/").post(protect, addOrderItems);
 router.route("/myorders").get(protect, getMyOrders);
