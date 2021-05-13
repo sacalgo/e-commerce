@@ -11,7 +11,8 @@ const authUser = asyncHandler(async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (user && user.matchPassword(password)) {
+    const isMatch = await user.matchPassword(password);
+    if (user && isMatch) {
       res.json({
         _id: user._id,
         name: user.name,
@@ -19,8 +20,9 @@ const authUser = asyncHandler(async (req, res) => {
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
       });
-      res.send({ email, password });
-      exit(1);
+    } else {
+      res.status(ResponseStatus.UNAUTHORIZED);
+      throw new Error("Invalid email or password");
     }
   } catch (err) {
     res.status(ResponseStatus.UNAUTHORIZED);
@@ -148,7 +150,7 @@ const updateUser = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
 
-    user.isAdmin = req.body.isAdmin||user.isAdmin;
+    user.isAdmin = req.body.isAdmin || user.isAdmin;
 
     const updatedUser = await user.save();
     res.json({
