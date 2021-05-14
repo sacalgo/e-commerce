@@ -24,12 +24,14 @@ const protect = asyncHandler(async (req, res, next) => {
 });
 
 const admin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
-    next();
-  } else {
+  try {
+    if (req.user && req.user.isAdmin) {
+      next();
+    }
+  } catch (error) {
     res.status(ResponseStatus.UNAUTHORIZED);
     throw new Error("Not authorized as an admin");
   }
 };
 
-export   {protect, admin};
+export { protect, admin };
