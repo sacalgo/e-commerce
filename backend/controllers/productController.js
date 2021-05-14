@@ -7,7 +7,7 @@ import ResponseStatus from "../utils/responseStatus";
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
     
-  const pageSize=2;//later change this to 8 
+  const pageSize=8;
   const page=Number(req.query.pageNumber)|| 1;
 
 
