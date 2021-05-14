@@ -6,41 +6,34 @@ import ResponseStatus from "../utils/responseStatus";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  try {
-    const pageSize = 8;
-    const page = Number(req.query.pageNumber) || 1;
+  const pageSize = 8;
+  const page = Number(req.query.pageNumber) || 1;
 
-    const keyword = req.query.keyword
-      ? {
-          name: {
-            $regex: req.query.keyword,
-            $options: "i",
-          },
-        }
-      : {};
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
 
-    const count = await Product.countDocuments({ ...keyword });
+  const count = await Product.countDocuments({ ...keyword });
 
-    const products = await Product.find({ ...keyword })
-      .limit(pageSize)
-      .skip(pageSize * (page - 1));
-    res.json({ products, page, pages: Math.ceil(count / pageSize) });
-  } catch (error) {
-    res.status(ResponseStatus.NOT_FOUND);
-    throw new Error("Products are not found");
-  }
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 //@desc Fetch sing Product
 //@route GET /api/products/:id
 //@access Public
 const getProductById = asyncHandler(async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      res.json(product);
-    }
-  } catch (error) {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    res.json(product);
+  } else {
     res.status(ResponseStatus.NOT_FOUND);
     throw new Error("Product not found");
   }
@@ -50,13 +43,11 @@ const getProductById = asyncHandler(async (req, res) => {
 //@route DELETE /api/products/:id
 //@access Private / Admin only
 const deleteProduct = asyncHandler(async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      await product.remove();
-      res.json({ message: "Product removed" });
-    }
-  } catch (error) {
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    await product.remove();
+    res.json({ message: "Product removed" });
+  } else {
     res.status(ResponseStatus.NOT_FOUND);
     throw new Error("Product not found");
   }
@@ -66,48 +57,40 @@ const deleteProduct = asyncHandler(async (req, res) => {
 //@route POST /api/products
 //@access Private / Admin only
 const createProduct = asyncHandler(async (req, res) => {
-  try {
-    const product = new Product({
-      name: "Sample name",
-      price: 0,
-      user: req.user._id,
-      image: "/images/sample.jpeg",
-      brand: "Sample brand",
-      category: "sampel category",
-      countInStock: 0,
-      numReviews: 0,
-      description: "Sample description",
-    });
-
-    const createdProduct = await product.save();
-    res.status(ResponseStatus.CREATED).json(createdProduct);
-  } catch (error) {
-    res.status(ResponseStatus.BAD_REQUEST);
-    throw new Error("Product can not be created");
-  }
+  const product = new Product({
+    name: "Sample name",
+    price: 0,
+    user: req.user._id,
+    image: "/images/sample.jpeg",
+    brand: "Sample brand",
+    category: "sampel category",
+    countInStock: 0,
+    numReviews: 0,
+    description: "Sample description",
+  });
+  const createdProduct = await product.save();
+  res.status(ResponseStatus.CREATED).json(createdProduct);
 });
 
 //@desc Update a product
 //@route PUT /api/products/:id
 //@access Private / Admin only
 const updateProduct = asyncHandler(async (req, res) => {
-  try {
-    const { name, price, description, image, brand, category, countInStock } =
-      req.body;
+  const { name, price, description, image, brand, category, countInStock } =
+    req.body;
 
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      product.name = name;
-      product.price = price;
-      product.description = description;
-      product.image = image;
-      product.brand = brand;
-      (product.category = category), (product.countInStock = countInStock);
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.image = image;
+    product.brand = brand;
+    (product.category = category), (product.countInStock = countInStock);
 
-      const updatedProduct = await product.save();
-      res.json(updatedProduct);
-    }
-  } catch (error) {
+    const updatedProduct = await product.save();
+    res.json(updatedProduct);
+  } else {
     res.status(ResponseStatus.NOT_FOUND);
     throw new Error("Product Not Found");
   }
@@ -117,35 +100,33 @@ const updateProduct = asyncHandler(async (req, res) => {
 //@route POST  /api/producst/:id/review
 //@access Private
 const createProductReview = asyncHandler(async (req, res) => {
-  try {
-    const { rating, comment } = req.body;
+  const { rating, comment } = req.body;
 
-    const product = await Product.findById(req.params.id);
-    if (product) {
-      const alreadyReviewed = product.reviews.find(
-        (r) => r.user.toString() === req.user._id.toString()
-      );
-      if (alreadyReviewed) {
-        res.status(ResponseStatus.BAD_REQUEST);
-        throw new Error("Product already reviewed");
-      }
-      const review = {
-        name: req.user.name,
-        rating: Number(rating),
-        comment,
-        user: req.user._id,
-      };
-
-      product.reviews.push(review);
-      product.numReviews = product.reviews.length;
-      product.rating =
-        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-        product.reviews.length;
-
-      await product.save();
-      res.status(ResponseStatus.CREATED).json({ message: "Review added" });
+  const product = await Product.findById(req.params.id);
+  if (product) {
+    const alreadyReviewed = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+    if (alreadyReviewed) {
+      res.status(ResponseStatus.BAD_REQUEST);
+      throw new Error("Product already reviewed");
     }
-  } catch (error) {
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+
+    product.reviews.push(review);
+    product.numReviews = product.reviews.length;
+    product.rating =
+      product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+      product.reviews.length;
+
+    await product.save();
+    res.status(ResponseStatus.CREATED).json({ message: "Review added" });
+  } else {
     res.status(ResponseStatus.NOT_FOUND);
     throw new Error("Product Not Found");
   }
@@ -155,14 +136,9 @@ const createProductReview = asyncHandler(async (req, res) => {
 //@route GET  /api/producst/top
 //@access Public
 const getTopProducts = asyncHandler(async (req, res) => {
-  try {
-    const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
 
-    res.json(products);
-  } catch (error) {
-    res.status(ResponseStatus.INTERNAL_ERROR);
-    throw new Error("Internal Server Error");
-  }
+  res.json(products);
 });
 
 export {
