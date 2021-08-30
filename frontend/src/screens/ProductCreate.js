@@ -66,6 +66,7 @@ const ProductCreate = ({ match, history }) => {
       <Link to="/admin/productlist" className="btn btn-light my-3">
         Go Back
       </Link>
+      <h3>Create Product</h3>
       {loading && <Loader />}
       {/* {error && <Message variant="danger">{error}</Message>} */}
 
