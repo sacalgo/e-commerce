@@ -19,6 +19,7 @@ import UserEditScreen from "./screens/UserEditScreen";
 import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
 import OrderListScreen from "./screens/OrderListScreen";
+import ProductCreate from "./screens/ProductCreate";
 
 function App() {
   return (
@@ -47,7 +48,8 @@ function App() {
             component={ProductListScreen}
             exact
           />
-          <Route path="/admin/product/:id/edit" component={ProductEditScreen} />
+          <Route path="/admin/product/:id/edit" component={ProductEditScreen} exact/>
+          <Route path="/admin/products" component={ProductCreate} exact/>
           <Route path="/admin/orderlist" component={OrderListScreen} />
           <Route path="/search/:keyword" component={HomeScreen} exact />
           <Route path="/page/:pageNumber" component={HomeScreen} exact />

@@ -79,6 +79,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
     };
     await axios.delete(`/api/products/${id}`, config);
     dispatch({ type: PRODUCT_DELETE_SUCCESS });
+    dispatch(listProducts());
   } catch (err) {
     dispatch({
       type: PRODUCT_DELETE_FAIL,
@@ -90,7 +91,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
   }
 };
 
-export const createProduct = () => async (dispatch, getState) => {
+export const createProduct = (product) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_CREATE_REQUEST });
     const {
@@ -101,12 +102,12 @@ export const createProduct = () => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.post(`/api/products`, {}, config);
+    const { data } = await axios.post(`/api/products`, product, config);
     dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
   } catch (err) {
     dispatch({
       type: PRODUCT_CREATE_FAIL,
-      payload:
+       payload:
         err.response && err.response.data.message
           ? err.response.data.message
           : err.message,

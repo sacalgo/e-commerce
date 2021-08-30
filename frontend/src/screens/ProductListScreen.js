@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 import { Table, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -43,11 +44,9 @@ const ProductListScreen = ({ history, match }) => {
       history.push("/login");
     }
 
-    if (successCreate) {
-      history.push(`/admin/product/${createdProduct._id}/edit`);
-    } else {
-      dispatch(listProducts("", pageNumber));
-    }
+  
+     dispatch(listProducts("", pageNumber));
+    
   }, [
     dispatch,
     history,
@@ -76,9 +75,11 @@ const ProductListScreen = ({ history, match }) => {
           <h1>Prodcuts</h1>
         </Col>
         <Col className="text-right">
-          <Button className="my-3" onClick={createProductHandler}>
-            <i className="fas fa-plus"></i> Create Product
-          </Button>
+          <Link to="/admin/products">
+            <Button className="my-3" onClick={createProductHandler}>
+              <i className="fas fa-plus"></i> Create Product
+            </Button>
+          </Link>
         </Col>
       </Row>
       {loadingDelete && <Loader />}
@@ -129,7 +130,7 @@ const ProductListScreen = ({ history, match }) => {
             </tbody>
           </Table>
 
-          <Paginate pages={pages} page={page}  isAdmin={true}/>
+          <Paginate pages={pages} page={page} isAdmin={true} />
         </>
       )}
     </>
