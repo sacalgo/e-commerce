@@ -60,35 +60,24 @@ const createProduct = asyncHandler(async (req, res) => {
   const { name, brand, image, price, description, category, countInStock } =
     req.body;
 
-  if (name === "") {
+ 
+
+  if(!(name && brand&& image&& price && description && category && countInStock)){
     res.status(ResponseStatus.BAD_REQUEST);
-    throw new Error("Name is required");
-  } else if (brand === "") {
-    res.status(ResponseStatus.BAD_REQUEST);
-    throw new Error("Brand is required");
-  } else if (image === "") {
-    res.status(ResponseStatus.BAD_REQUEST);
-    throw new Error("Image is required");
-  } else if (category === "") {
-    res.status(ResponseStatus.BAD_REQUEST);
-    throw new Error("category is required");
-  } else if (description === "") {
-    res.status(ResponseStatus.BAD_REQUEST);
-    throw new Error("Description is required");
-  } else {
-    const product = new Product({
-      name,
-      price,
-      user: req.user._id,
-      image,
-      brand,
-      category,
-      countInStock,
-      description,
-    });
-    const createProduct = await product.save();
-    res.status(ResponseStatus.CREATED).json(createProduct);
+    throw new Error("Fill Required Fields");
   }
+  const product = new Product({
+    name,
+    price,
+    user: req.user._id,
+    image,
+    brand,
+    category,
+    countInStock,
+    description,
+  });
+  const createProduct = await product.save();
+  res.status(ResponseStatus.CREATED).json(createProduct);
 
 });
 
