@@ -8,7 +8,6 @@ const connectDB=async()=>{
             useNewUrlParser:true,
             useCreateIndex:true
         });
-        console.log("mongodb URL", process.env.DB);
         console.log(`MongoDb Connect:${connect.connection.host}`.cyan.underline);
         
     } catch (err) {
