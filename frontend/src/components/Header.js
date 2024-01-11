@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useState } from "react";
 import { Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
@@ -11,6 +11,12 @@ const Header = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+  let value = cartItems.reduce((tal, item) => {
+    return tal + item.qty;
+  }, 0);
+  console.log(" value ", value);
   const logoutHandler = (e) => {
     dispatch(logout());
   };
@@ -28,8 +34,8 @@ const Header = () => {
             <Nav className="ml-auto">
               <LinkContainer to="/cart">
                 <Nav.Link>
-                  <i className="fas fa-shopping-cart" />
-                  Cart
+                    <i className="fas fa-shopping-cart" />
+                    <span className="badge badge-warning" id='lblCartCount'>{value}</span>
                 </Nav.Link>
               </LinkContainer>
               {userInfo ? (
